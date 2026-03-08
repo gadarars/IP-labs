@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Calculator</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+      margin-top: 100px;
+      background: #f0f0f0;
+    }
+
+    input {
+      width: 200px;
+      height: 40px;
+      font-size: 1.5rem;
+      text-align: right;
+      margin-bottom: 10px;
+      padding: 5px;
+    }
+
+    button {
+      width: 50px;
+      height: 50px;
+      font-size: 1.2rem;
+      margin: 4px;
+      cursor: pointer;
+      background: white;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .op  { background: orange; color: white; }
+    .eq  { background: green;  color: white; }
+    .clr { background: red;    color: white; width: 214px; }
+  </style>
+</head>
+<body>
+
+  <h2>Calculator</h2>
+
+  <!-- SCREEN -->
+  <input type="text" id="screen" value="0" readonly><br>
+
+  <!-- BUTTONS — just like the lab's <ul><li> list but with buttons -->
+  <div id="buttons">
+    <button>7</button>
+    <button>8</button>
+    <button>9</button>
+    <button class="op">/</button><br>
+
+    <button>4</button>
+    <button>5</button>
+    <button>6</button>
+    <button class="op">*</button><br>
+
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button class="op">-</button><br>
+
+    <button>0</button>
+    <button>.</button>
+    <button class="eq">=</button>
+    <button class="op">+</button><br>
+
+    <button class="clr">Clear</button>
+  </div>
+
+  <script>
+
+    const screen = document.getElementById('screen');
+
+   
+    function addToScreen(value) {
+      if (screen.value === '0') {
+        screen.value = value;
+      } else {
+        screen.value += value;
+      }
+    }
+
+    
+    function calculate() {
+      screen.value = eval(screen.value);
+    }
+
+    
+    function clearScreen() {
+      screen.value = '0';
+    }
+
+    // ONE event listener on the parent div
+    document.getElementById('buttons').addEventListener('click', function(e) {
+
+      // e.target = the button that was clicked
+      // e.target.textContent = the TEXT written on that button
+      const value = e.target.textContent;
+
+      
+      if (e.target.nodeName !== 'BUTTON') return;
+
+      
+      if (value === 'Clear') {
+        clearScreen();
+      } else if (value === '=') {
+        calculate();
+      } else {
+        addToScreen(value);
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>

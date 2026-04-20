@@ -1,0 +1,33 @@
+const mongoose = require("mongoose");
+
+// Schema = the shape/structure of our data in MongoDB
+const courseSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true, // must be provided
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  instructor: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  category: {
+    type: String,
+    required: true, // e.g. "Web Development", "Design", "Marketing"
+  },
+  enrolledStudents: {
+    type: Number,
+    default: 0, // starts at 0 if not provided
+  },
+});
+
+// Model = the object we use to talk to the database
+// "Course" will become the "courses" collection in MongoDB
+module.exports = mongoose.model("Course", courseSchema);

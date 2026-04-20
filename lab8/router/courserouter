@@ -1,0 +1,94 @@
+const express = require("express");
+const router = express.Router();
+
+// Import the Course model to interact with MongoDB
+const Course = require("../models/Course");
+
+// ───────────────────────────────────────────
+// CREATE — POST /courses
+// Add a new course to the database
+// ───────────────────────────────────────────
+router.post("/", async (req, res) => {
+  try {
+    // req.body contains the data sent by the client
+    const newCourse = await Course.create(req.body);
+    res.status(201).json(newCourse);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// ───────────────────────────────────────────
+// READ ALL — GET /courses
+// Get every course from the database
+// ───────────────────────────────────────────
+router.get("/", async (req, res) => {
+  try {
+    const allCourses = await Course.find(); // no filter = get everything
+    res.status(200).json(allCourses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ───────────────────────────────────────────
+// READ ONE — GET /courses/:id
+// Get a single course by its MongoDB ID
+// ───────────────────────────────────────────
+router.get("/:id", async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.id);
+
+    // If no course found with that ID, send 404
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    res.status(200).json(course);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ───────────────────────────────────────────
+// UPDATE — PUT /courses/:id
+// Update a course by its MongoDB ID
+// ───────────────────────────────────────────
+router.put("/:id", async (req, res) => {
+  try {
+    // findByIdAndUpdate: find by ID, apply changes, return the NEW updated doc
+    const updatedCourse = await Course.findByIdAndUpdate(
+      req.params.id,  // which document to find
+      req.body,       // what to change
+      { new: true }   // return the updated version (not the old one)
+    );
+
+    if (!updatedCourse) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    res.status(200).json(updatedCourse);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// ───────────────────────────────────────────
+// DELETE — DELETE /courses/:id
+// Remove a course by its MongoDB ID
+// ───────────────────────────────────────────
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedCourse = await Course.findByIdAndDelete(req.params.id);
+
+    if (!deletedCourse) {
+      return res.status(404).json({ message: "Course not found" });
+    }
+
+    res.status(200).json({ message: "Course deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;
